@@ -18,6 +18,8 @@ public class IndexBar extends View {
 
     private char[] indexs = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
     'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    private float height;
+    private float itemHeight;
     private int lastIndex = -1;
     private Context context;
     private Paint paint;
@@ -58,12 +60,19 @@ public class IndexBar extends View {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        height = MeasureSpec.getSize(heightMeasureSpec);
+        itemHeight = height/indexs.length;
+        Log.i("高度", height + "");
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        canvas.translate(dpToPx(3), dpToPx(25));
         for (int index = 0; index < indexs.length; index++){
-            canvas.drawText(indexs, index, 1, 0 , dpToPx(20)*index + 3.0f, paint);
+            Log.e("高度", itemHeight*index + "");
+            canvas.drawText(indexs, index, 1, getPaddingLeft() + dpToPx(3) , getPaddingTop() + itemHeight*index, paint);
         }
     }
 
@@ -72,30 +81,28 @@ public class IndexBar extends View {
         if (listener == null){
             return super.onTouchEvent(event);
         }
-        int index = (int) Math.floor((event.getRawY()- dpToPx(25))/dpToPx(20));
+        int index = (int) Math.floor(event.getY()/itemHeight);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
-                if (index >= 0 && index < indexs.length && index != lastIndex){
-                    Log.i("lastIndex", lastIndex + "");
-                    Log.i("index", index + "");
-                    lastIndex = index;
-                    listener.onClicked(index, indexs[index] + "");
-                    return true;
-                }
+                isConsumeClickEvent(index);
                 return true;
             case MotionEvent.ACTION_MOVE:
-                if (index >= 0 && index < indexs.length && index != lastIndex){
-                    Log.i("lastIndex", lastIndex + "");
-                    Log.i("index", index + "");
-                    lastIndex = index;
-                    listener.onClicked(index, indexs[index] + "");
-                    return true;
-                }
-                break;
+                return isConsumeClickEvent(index);
             case MotionEvent.ACTION_UP:
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    private boolean isConsumeClickEvent(int index){
+        if (index >= 0 && index < indexs.length && index != lastIndex){
+            Log.i("lastIndex", lastIndex + "");
+            Log.i("index", index + "");
+            lastIndex = index;
+            listener.onClicked(index, indexs[index] + "");
+            return true;
+        }
+        return false;
     }
 
     public void setOnIndexClickedListener(OnIndexClickedListener listener){

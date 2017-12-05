@@ -1,11 +1,11 @@
 package com.futureproteam.myapplication;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-public class MainActivity extends Activity{
+public class MainActivity extends AppCompatActivity{
 
     private IndexBar indexBar;
     private TextView textView;

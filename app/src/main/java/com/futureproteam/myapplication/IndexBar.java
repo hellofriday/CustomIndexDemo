@@ -59,17 +59,16 @@ public class IndexBar extends View {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        itemHeight = MeasureSpec.getSize(heightMeasureSpec)/indexs.length;
-    }
-
-    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        itemHeight = getHeight()/indexs.length;
         for (int index = 0; index < indexs.length; index++){
             Log.e("高度", itemHeight*index + "");
-            canvas.drawText(indexs, index, 1, getPaddingLeft() + dpToPx(3) , getPaddingTop() + itemHeight*index, paint);
+            float textWidth = paint.measureText(indexs[index] + "");
+            float dx = (getRight() - getLeft() - getPaddingLeft() - textWidth)/2.0f;
+            Log.e("dx", dx + "");
+            float dy = getPaddingTop() + itemHeight*index;
+            canvas.drawText(indexs, index, 1, dx, dy, paint);
         }
     }
 

@@ -18,7 +18,6 @@ public class IndexBar extends View {
 
     private char[] indexs = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
     'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-    private float height;
     private float itemHeight;
     private int lastIndex = -1;
     private Context context;
@@ -62,9 +61,7 @@ public class IndexBar extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        height = MeasureSpec.getSize(heightMeasureSpec);
-        itemHeight = height/indexs.length;
-        Log.i("高度", height + "");
+        itemHeight = MeasureSpec.getSize(heightMeasureSpec)/indexs.length;
     }
 
     @Override

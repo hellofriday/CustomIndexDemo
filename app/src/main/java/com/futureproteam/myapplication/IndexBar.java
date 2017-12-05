@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -17,7 +18,7 @@ public class IndexBar extends View {
 
     private char[] indexs = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
     'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-    private double textHeight;
+    private int lastIndex = -1;
     private Context context;
     private Paint paint;
     private OnIndexClickedListener listener;
@@ -37,7 +38,6 @@ public class IndexBar extends View {
     }
 
     private void init(Context context){
-        textHeight = indexs.length * dpToPx(20);
         this.context = context;
         paint = createPaint();
     }
@@ -69,14 +69,28 @@ public class IndexBar extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int index = (int) Math.floor(textHeight / event.getRawY()- dpToPx(25));
+        if (listener == null){
+            return super.onTouchEvent(event);
+        }
+        int index = (int) Math.floor((event.getRawY()- dpToPx(25))/dpToPx(20));
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
-                if (listener != null){
+                if (index >= 0 && index < indexs.length && index != lastIndex){
+                    Log.i("lastIndex", lastIndex + "");
+                    Log.i("index", index + "");
+                    lastIndex = index;
+                    listener.onClicked(index, indexs[index] + "");
                     return true;
                 }
+                return true;
             case MotionEvent.ACTION_MOVE:
-
+                if (index >= 0 && index < indexs.length && index != lastIndex){
+                    Log.i("lastIndex", lastIndex + "");
+                    Log.i("index", index + "");
+                    lastIndex = index;
+                    listener.onClicked(index, indexs[index] + "");
+                    return true;
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 break;
@@ -89,6 +103,6 @@ public class IndexBar extends View {
     }
 
     public interface OnIndexClickedListener {
-        void onClicked(int position, char c);
+        void onClicked(int position, String c);
     }
 }

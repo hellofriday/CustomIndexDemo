@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="hello">%1$s 您好</string>
+</resources>

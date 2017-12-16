@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -64,10 +65,25 @@ public class IndexBar extends View {
         itemHeight = getHeight()/indexs.length;
         for (int index = 0; index < indexs.length; index++){
             Log.e("高度", itemHeight*index + "");
-            float textWidth = paint.measureText(indexs[index] + "");
+            Rect bound = new Rect();
+            paint.getTextBounds(indexs, index, 1, bound);
+//            float textWidth = paint.measureText(indexs[index] + "");
+            float textWidth = bound.width();
+            float textHeight = bound.height();
+            Log.e("textHeight", textHeight + "");
+            Log.e("itemHeight", itemHeight + "");
+            Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+            Log.e("top", fontMetrics.top + "");
+            Log.e("ascent", fontMetrics.ascent + "");
+            Log.e("descent", fontMetrics.descent + "");
+            Log.e("bottom", fontMetrics.bottom + "");
+
             float dx = (getRight() - getLeft() - getPaddingLeft() - textWidth)/2.0f;
             Log.e("dx", dx + "");
-            float dy = getPaddingTop() + itemHeight*index;
+//            float dy = getPaddingTop() + itemHeight*index;
+
+            float dy = getPaddingTop() + Math.abs(fontMetrics.top) + itemHeight*index;
+
             canvas.drawText(indexs, index, 1, dx, dy, paint);
         }
     }
